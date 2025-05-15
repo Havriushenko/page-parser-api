@@ -43,7 +43,7 @@ public class JsonParserImpl implements JsonParser {
         }
       }
     } catch (JsonProcessingException e) {
-      log.error(e.getMessage());
+      log.error("{} {}, reason: {}", "Failed parse league by category", category, e.getMessage(), e);
       throw new JsonParerException(e);
     }
     return leagues;
@@ -58,7 +58,7 @@ public class JsonParserImpl implements JsonParser {
         .build();
   }
 
-  public Set<Event> parseEventsByLeague(String json) {
+  public Set<Event> parseEventsByLeague(String json, Long leagueId) {
     Set<Event> eventList = new HashSet<>();
     try {
       JsonNode root = mapper.readTree(json);
@@ -83,7 +83,7 @@ public class JsonParserImpl implements JsonParser {
         }
       }
     } catch (JsonProcessingException e) {
-      log.error(e.getMessage());
+      log.error("{}: {}, reason: {}", "Failed parse events by league id", leagueId, e.getMessage(), e);
       throw new JsonParerException(e);
 
     }

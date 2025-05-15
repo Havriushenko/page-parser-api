@@ -8,5 +8,5 @@ public interface JsonParser {
 
   Set<League> parseLeagueByCategory(String json, String category);
 
-  Set<Event> parseEventsByLeague(String json);
+  Set<Event> parseEventsByLeague(String json, Long leagueId);
 }

@@ -17,7 +17,7 @@ import okhttp3.Response;
 @RequiredArgsConstructor
 public class OkHttpService {
 
-  private static final String API_2_GET_LEAGUES = "/api-2/betline/sports?ctag=en-US&flags=urlv2&";
+  private static final String API_2_GET_LEAGUES = "/api-2/betline/sports?ctag=en-US&flags=urlv2";
   private static final String API_GET_MATCHES_BY_LEAGUE_ID = "/api-2/betline/changes/all?ctag=en-US&vtag=9c2cd386-31e1-4ce9-a140-28e9b63a9300&league_id=%s&hideClosed=true&flags=reg,urlv2,mm2,rrc,nodup";
 
   private final JsonParser jsonParser;
@@ -32,7 +32,7 @@ public class OkHttpService {
     try (Response response = client.newCall(request).execute()) {
       return jsonParser.parseLeagueByCategory(response.body().string(), category.getValue());
     } catch (IOException e) {
-      log.error(e.getMessage());
+      log.error("{}, reason: {}", "Failed request leagues", e.getMessage(), e);
       throw new OkHttpRequestException(e);
     }
   }
@@ -45,10 +45,10 @@ public class OkHttpService {
         .build();
 
     try (Response response = client.newCall(request).execute()) {
-      Set<Event> matches = jsonParser.parseEventsByLeague(response.body().string());
+      Set<Event> matches = jsonParser.parseEventsByLeague(response.body().string(), league.getId());
       league.setMatches(matches);
     } catch (IOException e) {
-      log.error(e.getMessage());
+      log.error("{}, reason: {}", "Failed request events", e.getMessage(), e);
       throw new OkHttpRequestException(e);
     }
     return league;
